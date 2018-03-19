@@ -25,7 +25,10 @@ module Puppet
       end
 
       def insync?(is)
-        false
+        if @resource[:nochange]
+          sync
+        end
+        @resource[:nochange]
       end
 
       defaultto { @resource[:name] }
@@ -33,6 +36,13 @@ module Puppet
 
     newparam(:withpath) do
       desc "Whether to show the full object path. Defaults to false."
+      defaultto :false
+
+      newvalues(:true, :false)
+    end
+
+    newparam(:nochange) do
+      desc "If true, this resource is not treated as a change in the catalog/report.  Defaults to false."
       defaultto :false
 
       newvalues(:true, :false)
